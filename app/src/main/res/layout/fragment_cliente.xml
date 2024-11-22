@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ClienteFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Listado de clientes"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:background="#FBE193"/>
+    <ListView
+        android:id="@+id/lv_clientes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_registrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Registrar cliente"
+        android:textColorHint="@color/white"
+        android:background="@drawable/button_01_roundered_01"
+        app:backgroundTint="#FFC107"
+        android:layout_margin="10dp"/>
+
+</LinearLayout>
