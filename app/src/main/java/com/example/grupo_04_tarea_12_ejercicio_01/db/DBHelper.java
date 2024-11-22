@@ -7,10 +7,14 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.grupo_04_tarea_12_ejercicio_01.db.Tables.ArticuloTable;
 import com.example.grupo_04_tarea_12_ejercicio_01.db.Tables.ClienteTable;
+import com.example.grupo_04_tarea_12_ejercicio_01.db.Tables.DetalleTable;
 import com.example.grupo_04_tarea_12_ejercicio_01.db.Tables.DireccionTable;
 import com.example.grupo_04_tarea_12_ejercicio_01.db.Tables.PedidoTable;
+import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Articulo;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Cliente;
+import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Detalle;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Direccion;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Pedido;
 
@@ -124,5 +128,71 @@ public class DBHelper {
         Pedido objPedido = PedidoTable.get_Pedido(dbAdapter.getDb(), idpedido);
         dbAdapter.close();
         return objPedido;
+    }
+
+    /* METHODS TABLE ARTICLE */
+    public void Insert_Articulo(Articulo objArticulo) {
+        dbAdapter.open();
+        ArticuloTable.Insert_Articulo(dbAdapter.getDb(), objArticulo);
+        dbAdapter.close();
+    }
+
+    public void Update_Articulo(Articulo objArticulo) {
+        dbAdapter.open();
+        ArticuloTable.Update_Articulo(dbAdapter.getDb(), objArticulo);
+        dbAdapter.close();
+    }
+
+    public void Delete_Articulo(int idarticulo) {
+        dbAdapter.open();
+        ArticuloTable.Delete_Articulo(dbAdapter.getDb(), idarticulo);
+        dbAdapter.close();
+    }
+
+    public ArrayList<Articulo> get_All_Articulos() {
+        dbAdapter.open();
+        ArrayList<Articulo> list = ArticuloTable.get_All_Articulos(dbAdapter.getDb());
+        dbAdapter.close();
+        return list;
+    }
+
+    public Articulo get_Articulo(int idarticulo) {
+        dbAdapter.open();
+        Articulo objArticulo = ArticuloTable.get_Articulo(dbAdapter.getDb(), idarticulo);
+        dbAdapter.close();
+        return objArticulo;
+    }
+
+    /* METHODS TABLE DETAIL */
+    public void Insert_Detalle(Detalle objDetalle) {
+        dbAdapter.open();
+        DetalleTable.Insert_Detalle(dbAdapter.getDb(), objDetalle);
+        dbAdapter.close();
+    }
+
+    public void Update_Detalle(Detalle objDetalle) {
+        dbAdapter.open();
+        DetalleTable.Update_Detalle(dbAdapter.getDb(), objDetalle);
+        dbAdapter.close();
+    }
+
+    public void Delete_Detalle(int idpedido, int idarticulo) {
+        dbAdapter.open();
+        DetalleTable.Delete_Detalle(dbAdapter.getDb(), idpedido, idarticulo);
+        dbAdapter.close();
+    }
+
+    public ArrayList<Detalle> get_All_Detalles() {
+        dbAdapter.open();
+        ArrayList<Detalle> list = DetalleTable.get_All_Detalles(dbAdapter.getDb());
+        dbAdapter.close();
+        return list;
+    }
+
+    public Detalle get_Detalle(int idpedido, int idarticulo) {
+        dbAdapter.open();
+        Detalle objDetalle = DetalleTable.get_Detalle(dbAdapter.getDb(), idpedido, idarticulo);
+        dbAdapter.close();
+        return objDetalle;
     }
 }
