@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Codigo cliente:"/>
+    <Spinner
+        android:id="@+id/spn_cliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha de envio:"/>
+    <EditText
+        android:id="@+id/et_fechaenvio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese la fecha de envio"
+        android:focusable="false"
+        android:clickable="true"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Codigo dirección:"/>
+    <Spinner
+        android:id="@+id/spn_direccion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cancelar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Cancelar"
+            android:textColorHint="@color/white"
+            android:background="@drawable/button_01_roundered_01"
+            app:backgroundTint="#B3B3B3"
+            android:layout_marginEnd="4dp"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_aceptar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Aceptar"
+            android:textColorHint="@color/white"
+            android:background="@drawable/button_01_roundered_01"
+            app:backgroundTint="#8BC34A"
+            android:layout_marginStart="4dp"/>
+    </LinearLayout>
+</LinearLayout>

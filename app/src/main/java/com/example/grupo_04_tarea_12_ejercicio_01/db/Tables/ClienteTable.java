@@ -12,8 +12,8 @@ public class ClienteTable {
 
     private static final String TABLE_CLIENTE = "cliente";
 
-    private static final String KEY_IDCLIENTE = "idcliente";
-    private static final String KEY_NOMBRE = "nombre";
+    public static final String KEY_IDCLIENTE = "idcliente";
+    public static final String KEY_NOMBRE = "nombre";
 
     private static final String TABLE_CREATE_CLIENTE =  "CREATE TABLE " + TABLE_CLIENTE +
             "(" +
