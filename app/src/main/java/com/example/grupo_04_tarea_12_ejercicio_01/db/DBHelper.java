@@ -60,7 +60,7 @@ public class DBHelper {
         return objCliente;
     }
 
-    /* METHODS TABLE DIRECCION */
+    /* METHODS TABLE ADDRESS */
     public void Insert_Direccion(Direccion objDireccion) {
         dbAdapter.open();
         DireccionTable.Insert_Direccion(dbAdapter.getDb(), objDireccion);
@@ -79,9 +79,9 @@ public class DBHelper {
         dbAdapter.close();
     }
 
-    public ArrayList<Direccion> get_All_Direcciones() {
+    public ArrayList<Direccion> get_All_Direcciones(int idcliente) {
         dbAdapter.open();
-        ArrayList<Direccion> list = DireccionTable.get_All_Direcciones(dbAdapter.getDb());
+        ArrayList<Direccion> list = DireccionTable.get_All_Direcciones(dbAdapter.getDb(), idcliente);
         dbAdapter.close();
         return list;
     }

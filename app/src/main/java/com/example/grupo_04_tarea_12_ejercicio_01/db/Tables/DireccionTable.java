@@ -59,10 +59,10 @@ public class DireccionTable {
         db.delete(TABLE_DIRECCION, KEY_IDDIRECCION + " = " + iddireccion, null);
     }
 
-    public static ArrayList<Direccion> get_All_Direcciones(SQLiteDatabase db) {
+    public static ArrayList<Direccion> get_All_Direcciones(SQLiteDatabase db, int idcliente) {
         ArrayList<Direccion> list = new ArrayList<>();
         try {
-            String query = "SELECT*FROM " + TABLE_DIRECCION;
+            String query = "SELECT*FROM " + TABLE_DIRECCION + " d" + " INNER JOIN " + ClienteTable.table_cliente() + " c ON d." + KEY_IDCLIENTE + " = c." + KEY_IDCLIENTE + " WHERE c." + KEY_IDCLIENTE + " = " + idcliente;
             Cursor cursor = db.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 do {
