@@ -95,15 +95,15 @@ public class ClienteFragment extends Fragment implements View.OnClickListener {
         MaterialButton btn_cancelar = dialog.findViewById(R.id.btn_cancelar);
 
         btn_aceptar.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               TextView tv_nombre = dialog.findViewById(R.id.tv_nombre);
-               Cliente objCliente = new Cliente(tv_nombre.getText().toString());
-               dbHelper.Insert_Cliente(objCliente);
-               tv_nombre.setText("");
-               listar_Clientes();
-               dialog.dismiss();
-           }
+            @Override
+            public void onClick(View v) {
+                TextView tv_nombre = dialog.findViewById(R.id.tv_nombre);
+                Cliente objCliente = new Cliente(tv_nombre.getText().toString());
+                dbHelper.Insert_Cliente(objCliente);
+                tv_nombre.setText("");
+                listar_Clientes();
+                dialog.dismiss();
+            }
         });
 
         btn_cancelar.setOnClickListener(new View.OnClickListener() {

@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PedidosFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".PedidosFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:text="Listado de Pedidos"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:background="#FBE193"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_pedidos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_registrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Registrar pedido"
+        android:textColorHint="@color/white"
+        android:background="@drawable/button_01_roundered_01"
+        app:backgroundTint="#FFC107"
+        android:layout_margin="10dp"/>
+</LinearLayout>
