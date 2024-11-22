@@ -64,6 +64,7 @@ public class Lista_Cliente_Adapter extends ArrayAdapter {
         return view;
     }
 
+
     private void register_Cliente(Context context, Cliente cliente) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.direccion_form_register);

@@ -37,10 +37,41 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_edit_24"/>
         </LinearLayout>
-        <ImageView
-            android:id="@+id/iv_add_dir"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_location_alt_24"/>
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginEnd="4dp">
+            <TextView
+                android:id="@+id/tv_dir_02"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Direccion 02"/>
+            <ImageView
+                android:id="@+id/iv_opt_02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit_24"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginEnd="4dp">
+            <TextView
+                android:id="@+id/tv_dir_03"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Direccion 03"/>
+            <ImageView
+                android:id="@+id/iv_opt_03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit_24"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
