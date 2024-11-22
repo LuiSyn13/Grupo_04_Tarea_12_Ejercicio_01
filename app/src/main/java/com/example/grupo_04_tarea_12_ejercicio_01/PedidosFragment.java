@@ -252,9 +252,11 @@ public class PedidosFragment extends Fragment implements View.OnClickListener {
         recyclerView.setAdapter(pedidoAdapter);
     }
 
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        listarPedidos();
+    }
 
     private void mostrarDateTimePicker(Context context, EditText editText) {
         final Calendar calendar = Calendar.getInstance();
