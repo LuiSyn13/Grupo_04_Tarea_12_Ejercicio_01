@@ -27,6 +27,10 @@ public class Direccion {
         this.idcliente = idcliente;
     }
 
+    public String getDireccionCompleta() {
+        return numero + " - " +  calle + " - " + comuna;  // Ejemplo de dirección completa
+    }
+
     public int getIddireccion() {
         return iddireccion;
     }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ import java.util.Locale;
 public class PedidosFragment extends Fragment implements View.OnClickListener {
     private DBHelper dbHelper;
     private RecyclerView recyclerView;
+    private PedidoAdapter pedidoAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -233,19 +235,24 @@ public class PedidosFragment extends Fragment implements View.OnClickListener {
 
 
     private void listarPedidos() {
-        ArrayList<Pedido> pedidos = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        ArrayList<Pedido> pedidos = new ArrayList<>(); // Asegúrate de inicializarlo como una lista vacía
+
+        // Verificar que dbHelper no es null antes de llamar al método
+        if (dbHelper != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pedidos = dbHelper.get_All_Pedidos();
+        } else {
+            Log.e("Pedidos", "Error: dbHelper es null o SDK no compatible.");
         }
 
-        if (pedidos != null && !pedidos.isEmpty()) {
-            PedidoAdapter adapter = new PedidoAdapter(pedidos);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(adapter);
-        } else {
-            Toast.makeText(getContext(), "No hay pedidos para mostrar", Toast.LENGTH_SHORT).show();
-        }
+        Log.d("Pedidos", "Número de pedidos: " + pedidos.size()); // Aquí no hace falta usar el operador ternario
+
+        // Inicialización del adaptador de pedidos
+        pedidoAdapter = new PedidoAdapter(getContext(),pedidos);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(pedidoAdapter);
     }
+
+
 
 
 
@@ -275,7 +282,6 @@ public class PedidosFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_registrar) {
             register_Pedidos(getContext());
-
         }
     }
 }

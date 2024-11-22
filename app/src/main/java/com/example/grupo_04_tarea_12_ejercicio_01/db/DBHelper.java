@@ -130,6 +130,28 @@ public class DBHelper {
         return objPedido;
     }
 
+    public String obtenerNombreClientePorId(int idCliente) {
+        dbAdapter.open();
+        Cliente objCliente = ClienteTable.get_Cliente(dbAdapter.getDb(), idCliente); // Obtiene el cliente
+        dbAdapter.close();
+
+        // Si el cliente existe, retornar su nombre, si no, retornar un mensaje vacío o nulo
+        if (objCliente != null) {
+            return objCliente.getNombre();
+        } else {
+            return "Cliente no encontrado";  // Si el cliente no existe
+        }
+    }
+
+    public String obtenerDireccionPorId(int iddireccion) {
+        dbAdapter.open();
+        Direccion direccion = DireccionTable.get_Direccion(dbAdapter.getDb(), iddireccion);  // Suponiendo que este método existe en tu tabla
+        dbAdapter.close();
+        return direccion != null ? direccion.getDireccionCompleta() : "Dirección no encontrada";  // Asumiendo que tienes un método `getDireccionCompleta`
+    }
+
+
+
     /* METHODS TABLE ARTICLE */
     public void Insert_Articulo(Articulo objArticulo) {
         dbAdapter.open();

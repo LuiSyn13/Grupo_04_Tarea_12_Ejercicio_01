@@ -115,4 +115,28 @@ public class PedidoTable {
             return null;
         }
     }
+
+    public static String obtenerNombreClientePorId(SQLiteDatabase db, int idCliente) {
+        String nombreCliente = "";
+        Cursor cursor = null;
+        try {
+            // Consulta para obtener el nombre del cliente
+            cursor = db.rawQuery("SELECT " + ClienteTable.KEY_NOMBRE + " FROM " + ClienteTable.table_cliente() + " WHERE " + ClienteTable.KEY_IDCLIENTE + " = ?",
+                    new String[]{String.valueOf(idCliente)});
+
+            // Si el resultado contiene datos, los extraemos
+            if (cursor.moveToFirst()) {
+                nombreCliente = cursor.getString(0); // Obtiene el nombre del cliente
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Manejo de errores
+        } finally {
+            // Cierra el cursor si está abierto
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return nombreCliente;
+    }
+
 }

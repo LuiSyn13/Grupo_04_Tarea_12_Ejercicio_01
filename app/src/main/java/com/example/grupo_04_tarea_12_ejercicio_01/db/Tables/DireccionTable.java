@@ -3,6 +3,7 @@ package com.example.grupo_04_tarea_12_ejercicio_01.db.Tables;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Direccion;
 
@@ -83,11 +84,12 @@ public class DireccionTable {
     }
 
     public static Direccion get_Direccion(SQLiteDatabase db, int iddireccion) {
+        Direccion objDireccion = null;
         try {
-            String query = "SELECT*FROM direccion WHERE " + KEY_IDDIRECCION + " = " + iddireccion;
-            Cursor cursor = db.rawQuery(query, null);
-            Direccion objDireccion = null;
-            if (cursor.moveToFirst()) {
+            String query = "SELECT * FROM " + TABLE_DIRECCION + " WHERE " + KEY_IDDIRECCION + " = ?";
+            Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(iddireccion)});
+
+            if (cursor != null && cursor.moveToFirst()) {
                 objDireccion = new Direccion();
                 objDireccion.setIddireccion(cursor.getInt(0));
                 objDireccion.setNumero(cursor.getString(1));
@@ -95,11 +97,17 @@ public class DireccionTable {
                 objDireccion.setComuna(cursor.getString(3));
                 objDireccion.setCiudad(cursor.getString(4));
                 objDireccion.setIdcliente(cursor.getInt(5));
+            } else {
+                Log.d("DireccionTable", "No se encontró la dirección con ID: " + iddireccion);
             }
-            return objDireccion;
-        }  catch (Exception e) {
-            return null;
+            if (cursor != null) {
+                cursor.close();
+            }
+        } catch (Exception e) {
+            Log.e("DireccionTable", "Error al obtener la dirección: ", e);
         }
+        return objDireccion;
     }
+
 
 }
