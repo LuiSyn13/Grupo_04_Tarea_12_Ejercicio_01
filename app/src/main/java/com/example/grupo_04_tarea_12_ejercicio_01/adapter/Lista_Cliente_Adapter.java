@@ -1,5 +1,6 @@
 package com.example.grupo_04_tarea_12_ejercicio_01.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class Lista_Cliente_Adapter extends ArrayAdapter {
         this.clientes = clientes;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -44,79 +46,59 @@ public class Lista_Cliente_Adapter extends ArrayAdapter {
         Cliente cliente = clientes.get(position);
         TextView tv_cliente = view.findViewById(R.id.tv_cliente);
         TextView tv_dir_01 = view.findViewById(R.id.tv_dir_01);
-        TextView tv_dir_02 = view.findViewById(R.id.tv_dir_02);
-        TextView tv_dir_03 = view.findViewById(R.id.tv_dir_03);
         ImageView iv_opt_01 = view.findViewById(R.id.iv_opt_01);
-        ImageView iv_opt_02 = view.findViewById(R.id.iv_opt_02);
-        ImageView iv_opt_03 = view.findViewById(R.id.iv_opt_03);
 
         ArrayList<Direccion> direcciones = dbHelper.get_All_Direcciones(cliente.getIdcliente());
         if (direcciones.size() > 0) {
             tv_dir_01.setText(direcciones.get(0).getNumero() + " " + direcciones.get(0).getCalle());
         }
-        if (direcciones.size() > 1) {
-            tv_dir_02.setText(direcciones.get(1).getNumero() + " " + direcciones.get(1).getCalle());
-        }
-        if (direcciones.size() > 2) {
-            tv_dir_03.setText(direcciones.get(2).getNumero() + " " + direcciones.get(2).getCalle());
-        }
 
-        tv_cliente.setText(cliente.getNombre() + " " + direcciones.size());
+        tv_cliente.setText(cliente.getNombre());
         iv_opt_01.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.direccion_form_register);
-                dialog.setCancelable(true);
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                TextView tv_nombre = dialog.findViewById(R.id.tv_nombre);
-                TextInputEditText tie_numero = dialog.findViewById(R.id.tie_numero);
-                TextInputEditText tie_calle = dialog.findViewById(R.id.tie_calle);
-                TextInputEditText tie_comuna = dialog.findViewById(R.id.tie_comuna);
-                TextInputEditText tie_ciudad = dialog.findViewById(R.id.tie_ciudad);
-
-                MaterialButton btn_aceptar = dialog.findViewById(R.id.btn_aceptar);
-                MaterialButton btn_cancelar = dialog.findViewById(R.id.btn_cancelar);
-                tv_nombre.setText(cliente.getNombre());
-
-
-                btn_aceptar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String numero = tie_numero.getText().toString();
-                        String calle = tie_calle.getText().toString();
-                        String comuna = tie_comuna.getText().toString();
-                        String ciudad = tie_ciudad.getText().toString();
-                        Direccion objDireccion = new Direccion(numero, calle, comuna, ciudad, cliente.getIdcliente());
-                        dbHelper.Insert_Direccion(objDireccion);
-                        dialog.dismiss();
-                    }
-                });
-                btn_cancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-            }
-        });
-
-        iv_opt_02.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Editar direccion 02", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        iv_opt_03.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Editar direccion 03", Toast.LENGTH_SHORT).show();
+                register_Cliente(context, cliente);
             }
         });
 
         return view;
+    }
+
+    private void register_Cliente(Context context, Cliente cliente) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.direccion_form_register);
+        dialog.setCancelable(true);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView tv_nombre = dialog.findViewById(R.id.tv_nombre);
+        TextInputEditText tie_numero = dialog.findViewById(R.id.tie_numero);
+        TextInputEditText tie_calle = dialog.findViewById(R.id.tie_calle);
+        TextInputEditText tie_comuna = dialog.findViewById(R.id.tie_comuna);
+        TextInputEditText tie_ciudad = dialog.findViewById(R.id.tie_ciudad);
+
+        MaterialButton btn_aceptar = dialog.findViewById(R.id.btn_aceptar);
+        MaterialButton btn_cancelar = dialog.findViewById(R.id.btn_cancelar);
+        tv_nombre.setText(cliente.getNombre());
+
+
+        btn_aceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String numero = tie_numero.getText().toString();
+                String calle = tie_calle.getText().toString();
+                String comuna = tie_comuna.getText().toString();
+                String ciudad = tie_ciudad.getText().toString();
+                Direccion objDireccion = new Direccion(numero, calle, comuna, ciudad, cliente.getIdcliente());
+                dbHelper.Insert_Direccion(objDireccion);
+                dialog.dismiss();
+            }
+        });
+        btn_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

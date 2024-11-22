@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -74,6 +75,44 @@ public class ClienteFragment extends Fragment implements View.OnClickListener {
         lv_clientes = view.findViewById(R.id.lv_clientes);
         dbHelper = new DBHelper(getContext());
         listar_Clientes();
+
+        lv_clientes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Dialog dialog = new Dialog(view.getContext());
+                dialog.setContentView(R.layout.cliente_form_register);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(true);
+
+                MaterialButton btn_aceptar = dialog.findViewById(R.id.btn_aceptar);
+                MaterialButton btn_cancelar = dialog.findViewById(R.id.btn_cancelar);
+
+                TextView tv_nombre = dialog.findViewById(R.id.tv_nombre);
+                tv_nombre.setText(dbHelper.get_All_Clientes().get(position).getNombre());
+
+                btn_aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Cliente objCliente = new Cliente(tv_nombre.getText().toString());
+                        objCliente.setIdcliente(dbHelper.get_All_Clientes().get(position).getIdcliente());
+                        dbHelper.Update_Cliente(objCliente);
+                        tv_nombre.setText("");
+                        listar_Clientes();
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_cancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                return false;
+            }
+        });
         return view;
     }
 
