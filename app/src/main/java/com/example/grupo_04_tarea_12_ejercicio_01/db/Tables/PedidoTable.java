@@ -27,8 +27,10 @@ public class PedidoTable {
             KEY_IDCLIENTE + " integer not null, " +
             KEY_FECHA_ENVIO + " datetime not null, " +
             KEY_IDDIRECCION + " integer not null, " +
-            "FOREIGN KEY(" + KEY_IDCLIENTE + ") REFERENCES " + ClienteTable.table_cliente() + "(" + KEY_IDCLIENTE + "), " +
-            "FOREIGN KEY(" + KEY_IDDIRECCION + ") REFERENCES " + DireccionTable.table_direccion() + "(" + KEY_IDDIRECCION + ") " +
+            "FOREIGN KEY(" + KEY_IDCLIENTE + ") " +
+            "REFERENCES " + ClienteTable.table_cliente() + "(" + KEY_IDCLIENTE + ") ON DELETE CASCADE, " +
+            "FOREIGN KEY(" + KEY_IDDIRECCION + ") " +
+            "REFERENCES " + DireccionTable.table_direccion() + "(" + KEY_IDDIRECCION + ") ON DELETE CASCADE" +
             ")";
 
     public static String table_pedido() {
@@ -40,7 +42,7 @@ public class PedidoTable {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void Insert_Pedido(SQLiteDatabase db, Pedido objPedido) {
+    public static int Insert_Pedido(SQLiteDatabase db, Pedido objPedido) {
         ContentValues values = new ContentValues();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -49,7 +51,8 @@ public class PedidoTable {
         values.put(KEY_IDCLIENTE, objPedido.getIdcliente());
         values.put(KEY_FECHA_ENVIO, fechaEnvioFormatted);
         values.put(KEY_IDDIRECCION, objPedido.getIddireccion());
-        db.insert(TABLE_PEDIDO, null, values);
+        long i = db.insert(TABLE_PEDIDO, null, values);
+        return (int) i;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

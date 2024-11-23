@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Grupo_04_Tarea_12_Ejercicio_01"
         tools:targetApi="31">
         <activity
+            android:name=".PedidoFormActivity"
+            android:exported="false" />
+        <activity
             android:name=".InicioActivity"
             android:exported="true"
             android:theme="@style/Theme.Grupo_04_Tarea_12_Ejercicio_01.NoActionBar">
@@ -22,12 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Grupo_04_Tarea_12_Ejercicio_01.NoActionBar"/>
+            android:theme="@style/Theme.Grupo_04_Tarea_12_Ejercicio_01.NoActionBar" />
     </application>
 
 </manifest>

@@ -45,6 +45,15 @@ public class DBAdapter {
 
             db.execSQL("DROP TABLE IF EXISTS " + DireccionTable.table_direccion());
             DireccionTable.onCreate_TABLE_DIRECCION(db);
+
+            db.execSQL("DROP TABLE IF EXISTS " + PedidoTable.table_pedido());
+            PedidoTable.onCreate_TABLE_PEDIDO(db);
+
+            db.execSQL("DROP TABLE IF EXISTS " + ArticuloTable.table_articulo());
+            ArticuloTable.onCreate_TABLE_ARTICULO(db);
+
+            db.execSQL("DROP TABLE IF EXISTS " + DetalleTable.table_detalle());
+            DetalleTable.onCreate_TABLE_DETALLE(db);
         }
 
         @Override

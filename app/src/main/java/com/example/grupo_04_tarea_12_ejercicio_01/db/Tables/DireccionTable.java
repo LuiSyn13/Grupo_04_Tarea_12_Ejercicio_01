@@ -15,6 +15,7 @@ public class DireccionTable {
     private static final String TABLE_DIRECCION = "direccion";
 
     private static final String KEY_IDDIRECCION = "iddireccion";
+    private static final String KEY_NUMERO = "numero";
     private static final String KEY_CALLE = "calle";
     private static final String KEY_COMUNA = "comuna";
     private static final String KEY_CIUDAD = "ciudad";
@@ -23,11 +24,14 @@ public class DireccionTable {
     private static final String TABLE_CREATE_DIRECCION = "CREATE TABLE " + TABLE_DIRECCION +
             "(" +
             KEY_IDDIRECCION + " integer PRIMARY KEY AUTOINCREMENT, " +
+            KEY_NUMERO + " text not null, " +
             KEY_CALLE + " text not null, " +
             KEY_COMUNA + " text not null, " +
             KEY_CIUDAD + " text not null, " +
             KEY_IDCLIENTE + " integer, " +
-            "FOREIGN KEY (" + KEY_IDCLIENTE + ") REFERENCES " + ClienteTable.table_cliente() + "(" + KEY_IDCLIENTE + ")" +
+            "FOREIGN KEY (" + KEY_IDCLIENTE + ") " +
+            "REFERENCES " + ClienteTable.table_cliente() + "(" + KEY_IDCLIENTE + ") " +
+            "ON DELETE CASCADE" +
             ")";
 
     public static String table_direccion() {
@@ -40,6 +44,7 @@ public class DireccionTable {
 
     public static void Insert_Direccion(SQLiteDatabase db, Direccion objDireccion) {
         ContentValues values = new ContentValues();
+        values.put(KEY_NUMERO, objDireccion.getNumero());
         values.put(KEY_CALLE, objDireccion.getNumero());
         values.put(KEY_COMUNA, objDireccion.getCalle());
         values.put(KEY_CIUDAD, objDireccion.getComuna());
@@ -49,9 +54,10 @@ public class DireccionTable {
 
     public static void Update_Direccion(SQLiteDatabase db, Direccion objDireccion) {
         ContentValues values = new ContentValues();
-        values.put(KEY_CALLE, objDireccion.getNumero());
-        values.put(KEY_COMUNA, objDireccion.getCalle());
-        values.put(KEY_CIUDAD, objDireccion.getComuna());
+        values.put(KEY_NUMERO, objDireccion.getNumero());
+        values.put(KEY_CALLE, objDireccion.getCalle());
+        values.put(KEY_COMUNA, objDireccion.getComuna());
+        values.put(KEY_CIUDAD, objDireccion.getCiudad());
         values.put(KEY_IDCLIENTE, objDireccion.getIdcliente());
         db.update(TABLE_DIRECCION, values, KEY_IDDIRECCION + " = " + objDireccion.getIddireccion(), null);
     }

@@ -29,10 +29,14 @@ public class ClienteTable {
         db.execSQL(TABLE_CREATE_CLIENTE);
     }
 
-    public static void Insert_Cliente(SQLiteDatabase db, Cliente objCliente) {
+    public static int Insert_Cliente(SQLiteDatabase db, Cliente objCliente) {
         ContentValues values = new ContentValues();
         values.put(KEY_NOMBRE, objCliente.getNombre());
-        db.insert(TABLE_CLIENTE, null, values);
+        long l = db.insert(TABLE_CLIENTE, null, values);
+        if (l == -1) {
+            return 0;
+        }
+        return (int) l;
     }
 
     public static void Update_Cliente(SQLiteDatabase db, Cliente objCliente) {
@@ -42,7 +46,11 @@ public class ClienteTable {
     }
 
     public static void Delete_Cliente(SQLiteDatabase db, int idcliente) {
-        db.delete(TABLE_CLIENTE, KEY_IDCLIENTE + " = " + idcliente, null);
+        try {
+            db.delete(TABLE_CLIENTE, KEY_IDCLIENTE + " = " + idcliente, null);
+        } catch (Exception e) {
+
+        }
     }
 
     public static ArrayList<Cliente> get_All_Clientes(SQLiteDatabase db) {

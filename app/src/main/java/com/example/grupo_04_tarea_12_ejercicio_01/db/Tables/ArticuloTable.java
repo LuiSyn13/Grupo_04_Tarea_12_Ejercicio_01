@@ -37,6 +37,12 @@ public class ArticuloTable {
         db.insert(TABLE_ARTICULO, null, values);
     }
 
+    public static void UpdateStock_Articulo(SQLiteDatabase db, int idarticulo, int stock) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_STOCK, stock);
+        db.update(TABLE_ARTICULO, values, KEY_IDARTICULO + " = " + idarticulo, null);
+    }
+
     public static void Update_Articulo(SQLiteDatabase db, Articulo objArticulo) {
         ContentValues values = new ContentValues();
         values.put(KEY_DESCRIPCION, objArticulo.getDescripcion());

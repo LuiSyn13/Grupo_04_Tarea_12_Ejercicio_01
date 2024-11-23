@@ -8,13 +8,27 @@
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Listado de clientes"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:background="#FBE193"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#FBE193">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Listado de clientes"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:background="#FBE193"/>
+        <ImageButton
+            android:id="@+id/ibtn_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_update_24"
+            android:layout_marginEnd="10dp"/>
+    </LinearLayout>
     <ListView
         android:id="@+id/lv_clientes"
         android:layout_width="match_parent"

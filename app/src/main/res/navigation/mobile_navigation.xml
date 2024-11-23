@@ -15,4 +15,9 @@
         android:name="com.example.grupo_04_tarea_12_ejercicio_01.PedidosFragment"
         android:label="Pedidos"
         tools:layout="@layout/fragment_pedidos" />
+    <fragment
+        android:id="@+id/nav_pedido_detalle"
+        android:name="com.example.grupo_04_tarea_12_ejercicio_01.PedidoDetalleFragment"
+        android:label="fragment_pedido_detalle"
+        tools:layout="@layout/fragment_pedido_detalle" />
 </navigation>

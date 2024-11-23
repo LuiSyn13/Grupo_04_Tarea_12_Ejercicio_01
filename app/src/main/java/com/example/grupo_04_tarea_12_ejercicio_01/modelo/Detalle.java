@@ -13,11 +13,6 @@ public class Detalle {
         this.cantidad = cantidad;
     }
 
-    public Detalle(int idpedido, int cantidad) {
-        this.idpedido = idpedido;
-        this.cantidad = cantidad;
-    }
-
     public int getIdarticulo() {
         return idarticulo;
     }

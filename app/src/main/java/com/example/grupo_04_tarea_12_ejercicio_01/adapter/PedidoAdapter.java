@@ -1,11 +1,15 @@
 package com.example.grupo_04_tarea_12_ejercicio_01.adapter;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.grupo_04_tarea_12_ejercicio_01.PedidoFormActivity;
 import com.example.grupo_04_tarea_12_ejercicio_01.R;
 import com.example.grupo_04_tarea_12_ejercicio_01.db.DBHelper;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Cliente;
@@ -26,6 +31,7 @@ import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Direccion;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Pedido;
 import com.google.android.material.button.MaterialButton;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,21 +39,23 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoViewHolder> {
-    private ArrayList<Pedido> pedidos;
+    //private ArrayList<Pedido> pedidos;
+    private ArrayList<Object[]> pedidos;
     private DBHelper dbHelper;
     private Context context;
 
-    public PedidoAdapter(Context context, ArrayList<Pedido> pedidos) {
+    public PedidoAdapter(Context context, ArrayList<Object[]> pedidos) {
         this.context = context;
         this.pedidos = pedidos;
         this.dbHelper = new DBHelper(context);
     }
 
-    public void setPedidos(ArrayList<Pedido> pedidos) {
+    public void setPedidos(ArrayList<Object[]> pedidos) {
         this.pedidos = pedidos;
-        notifyDataSetChanged(); // Notifica al RecyclerView que los datos han cambiado
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -59,15 +67,15 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
 
     @Override
     public void onBindViewHolder(@NonNull PedidoViewHolder holder, int position) {
-        Pedido pedido = pedidos.get(position);
+        Object[] pedido = pedidos.get(position);
 
-        String nombreCliente = dbHelper.obtenerNombreClientePorId(pedido.getIdcliente());
-        String direccionCompleta = dbHelper.obtenerDireccionPorId(pedido.getIddireccion());
+        String nombreCliente = dbHelper.obtenerNombreClientePorId(Integer.parseInt(pedido[1].toString()));
+        String direccionCompleta = dbHelper.obtenerDireccionPorId(Integer.parseInt(pedido[3].toString()));
 
         // Ahora, en lugar de mostrar el ID del cliente, mostramos su nombre
         holder.tvCliente.setText(nombreCliente + "");
-        holder.tvCodigo.setText(String.valueOf(pedido.getIdpedido())+"");
-        holder.tvFecha.setText(pedido.getFecha_envio().toString()+"");
+        holder.tvCodigo.setText(String.valueOf(pedido[0])+"");
+        holder.tvFecha.setText(pedido[2].toString()+"");
         holder.tvDireccion.setText(direccionCompleta + "");
 
         holder.itemView.setOnLongClickListener(v -> {
@@ -81,22 +89,36 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         return pedidos.size();
     }
 
-    private void showOptionsDialog(Pedido pedido, int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Seleccione una opción")
-                .setItems(new String[]{"Editar", "Eliminar"}, (dialog, which) -> {
-                    switch (which) {
-                        case 0: // Editar
-                            // Lógica para editar el pedido
-                            editarPedido(context,pedido);
-                            break;
-                        case 1: // Eliminar
-                            // Lógica para eliminar el pedido
-                            eliminarPedido(pedido, position);
-                            break;
-                    }
-                })
-                .show();
+    private void showOptionsDialog(Object[] elemento, int position) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.custom_options_date);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+
+        MaterialButton btn_editar = dialog.findViewById(R.id.btn_editar);
+        MaterialButton btn_eliminar = dialog.findViewById(R.id.btn_eliminar);
+        MaterialButton btn_detalle = dialog.findViewById(R.id.btn_detalle);
+
+        btn_editar.setOnClickListener(v -> {
+            Intent intent = new Intent(context, PedidoFormActivity.class);
+            Bundle contenedor = new Bundle();
+            contenedor.putSerializable("option", 2);
+            contenedor.putSerializable("pedido", elemento);
+            intent.putExtras(contenedor);
+            context.startActivity(intent);
+            dialog.dismiss();
+        });
+
+        btn_eliminar.setOnClickListener(v -> {
+            eliminarPedido(elemento, position);
+            dialog.dismiss();
+        });
+
+        btn_detalle.setOnClickListener(v -> {
+            // Lógica para mostrar detalles
+        });
+
+        dialog.show();
     }
 
     private void editarPedido(Context context, Pedido pedido) {
@@ -111,10 +133,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         Spinner spnCliente = dialog.findViewById(R.id.spn_cliente);
         Spinner spnDireccion = dialog.findViewById(R.id.spn_direccion);
 
-        // Obtener lista de clientes
         ArrayList<Cliente> clientes = dbHelper.get_All_Clientes();
 
-        // Adaptador para el Spinner de Clientes
         ArrayAdapter<Cliente> clienteAdapter = new ArrayAdapter<Cliente>(context, android.R.layout.simple_spinner_item, clientes) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -141,7 +161,6 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         clienteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnCliente.setAdapter(clienteAdapter);
 
-        // Precargar cliente seleccionado
         for (int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getIdcliente() == pedido.getIdcliente()) {
                 spnCliente.setSelection(i);
@@ -149,17 +168,14 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
             }
         }
 
-        // Configurar listener para cargar direcciones según el cliente seleccionado
         spnCliente.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Cliente selectedCliente = (Cliente) parent.getItemAtPosition(position);
                 int clienteId = selectedCliente.getIdcliente();
 
-                // Obtener las direcciones del cliente seleccionado
                 ArrayList<Direccion> direcciones = dbHelper.get_All_Direcciones(clienteId);
 
-                // Crear y configurar adaptador para Spinner de Direcciones
                 ArrayAdapter<Direccion> direccionAdapter = new ArrayAdapter<Direccion>(context, android.R.layout.simple_spinner_item, direcciones) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
@@ -186,7 +202,6 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
                 direccionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spnDireccion.setAdapter(direccionAdapter);
 
-                // Precargar dirección seleccionada (si corresponde)
                 for (int i = 0; i < direcciones.size(); i++) {
                     if (direcciones.get(i).getIddireccion() == pedido.getIddireccion()) {
                         spnDireccion.setSelection(i);
@@ -201,16 +216,13 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
             }
         });
 
-        // Precargar fecha de envío
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             et_fechaenvio.setText(pedido.getFecha_envio().format(formatter));
         }
 
-        // Agregar evento para abrir selector de fecha
         et_fechaenvio.setOnClickListener(v -> mostrarDateTimePicker(context, et_fechaenvio));
 
-        // Validar y actualizar el pedido
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             btn_aceptar.setOnClickListener(v -> {
                 String fechaEnvio = et_fechaenvio.getText().toString();
@@ -274,15 +286,17 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private void eliminarPedido(Pedido pedido, int position) {
-        // Confirmar la eliminación
+    private void eliminarPedido(Object[] elemento, int position) {
         new AlertDialog.Builder(context)
                 .setTitle("Confirmar eliminación")
                 .setMessage("¿Está seguro de que desea eliminar este pedido?")
                 .setPositiveButton("Eliminar", (dialog, which) -> {
-                    // Eliminar de la base de datos
+                    dbHelper.Delete_Detalle((Integer) elemento[5], (Integer) elemento[1]);
+                    Pedido pedido = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        pedido = dbHelper.get_Pedido(Integer.parseInt(elemento[0].toString()));
+                    }
                     dbHelper.Delete_Pedido(pedido.getIdpedido());
-                    // Eliminar de la lista y notificar cambios al adaptador
                     pedidos.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, pedidos.size());

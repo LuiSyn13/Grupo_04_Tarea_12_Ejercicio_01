@@ -21,17 +21,18 @@ import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Pedido;
 import java.util.ArrayList;
 
 public class DBHelper {
-    private DBAdapter dbAdapter;
+    private final DBAdapter dbAdapter;
 
     public  DBHelper(Context context) {
         dbAdapter = new DBAdapter(context);
     }
 
     /* METHODS TABLE CLIENT */
-    public void Insert_Cliente(Cliente objCliente) {
+    public int Insert_Cliente(Cliente objCliente) {
         dbAdapter.open();
-        ClienteTable.Insert_Cliente(dbAdapter.getDb(), objCliente);
+        int i = ClienteTable.Insert_Cliente(dbAdapter.getDb(), objCliente);
         dbAdapter.close();
+        return i;
     }
 
     public void Update_Cliente(Cliente objCliente) {
@@ -95,10 +96,11 @@ public class DBHelper {
 
     /* METHODS TABLE PEDIDO */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void Insert_Pedido(Pedido objPedido) {
+    public int Insert_Pedido(Pedido objPedido) {
         dbAdapter.open();
-        PedidoTable.Insert_Pedido(dbAdapter.getDb(), objPedido);
+        int i = PedidoTable.Insert_Pedido(dbAdapter.getDb(), objPedido);
         dbAdapter.close();
+        return i;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -159,6 +161,12 @@ public class DBHelper {
         dbAdapter.close();
     }
 
+    public void Update_Stock_Articulo(int idarticulo, int stock) {
+        dbAdapter.open();
+        ArticuloTable.UpdateStock_Articulo(dbAdapter.getDb(), idarticulo, stock);
+        dbAdapter.close();
+    }
+
     public void Update_Articulo(Articulo objArticulo) {
         dbAdapter.open();
         ArticuloTable.Update_Articulo(dbAdapter.getDb(), objArticulo);
@@ -198,15 +206,22 @@ public class DBHelper {
         dbAdapter.close();
     }
 
-    public void Delete_Detalle(int idpedido, int idarticulo) {
+    public void Delete_Detalle(int idarticulo, int idpedido) {
         dbAdapter.open();
-        DetalleTable.Delete_Detalle(dbAdapter.getDb(), idpedido, idarticulo);
+        DetalleTable.Delete_Detalle(dbAdapter.getDb(), idarticulo, idpedido);
         dbAdapter.close();
     }
 
     public ArrayList<Detalle> get_All_Detalles() {
         dbAdapter.open();
         ArrayList<Detalle> list = DetalleTable.get_All_Detalles(dbAdapter.getDb());
+        dbAdapter.close();
+        return list;
+    }
+
+    public ArrayList<Object[]> get_All_DetallesTOTAL() {
+        dbAdapter.open();
+        ArrayList<Object[]> list = DetalleTable.get_All_DetallesTOTAL(dbAdapter.getDb());
         dbAdapter.close();
         return list;
     }
