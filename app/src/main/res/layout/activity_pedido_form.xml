@@ -9,100 +9,115 @@
     tools:context=".PedidoFormActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:background="#FFFBDA">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Codigo cliente:"/>
-        <Spinner
-            android:id="@+id/spn_cliente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fecha de envio:"/>
-        <EditText
-            android:id="@+id/et_fechaenvio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingrese la fecha de envio"
-            android:focusable="false"
-            android:clickable="true"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Codigo dirección:"/>
-        <Spinner
-            android:id="@+id/spn_direccion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:background="#E3FDFD">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Seleccione el articulo:"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Spinner
-                android:id="@+id/spn_articulo"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/btn_add_articulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_people_24"
-                android:layout_marginStart="20dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#FFFBDA">
             <TextView
-                android:id="@+id/tv_cantidad_disp"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="C. Disp: 00"
-                android:textSize="16dp"
-                android:layout_marginEnd="20dp"/>
+                android:text="Cliente:"/>
+            <TextView
+                android:id="@+id/tv_cliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NAME FOR YOU"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+            <Spinner
+                android:id="@+id/spn_cliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de envio:"/>
             <EditText
-                android:id="@+id/et_cantidad"
-                android:layout_width="0dp"
+                android:id="@+id/et_fechaenvio"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:hint="0"
-                android:inputType="number"/>
-            <ImageButton
-                android:id="@+id/btn_add_cantidad"
-                android:layout_width="wrap_content"
+                android:hint="Ingrese la fecha de envio"
+                android:focusable="false"
+                android:clickable="true"/>
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_24"
-                android:layout_marginStart="20dp"/>
+                android:text="Codigo dirección:"/>
+            <Spinner
+                android:id="@+id/spn_direccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="#E3FDFD">
+            <TextView
+                id="@+id/tv_info_articulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccione el articulo:"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <Spinner
+                    android:id="@+id/spn_articulo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:id="@+id/btn_add_articulo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_people_24"
+                    android:layout_marginStart="20dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/tv_cantidad_disp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="C. Disp: 00"
+                    android:textSize="16dp"
+                    android:layout_marginEnd="20dp"/>
+                <EditText
+                    android:id="@+id/et_cantidad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:hint="0"
+                    android:inputType="number"/>
+                <ImageButton
+                    android:id="@+id/btn_add_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add_24"
+                    android:layout_marginStart="20dp"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_margin="10dp">
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cancelar"
             android:layout_width="0dp"

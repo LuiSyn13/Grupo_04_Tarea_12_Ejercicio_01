@@ -55,8 +55,6 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
     private Object[] elemento_dp;
 
     private int art_stock = 0;
-    private int idcliente = 0;
-    private int iddireccion = 0;
     private int option = 0;
     private String fechaenvio = "";
 
@@ -75,6 +73,7 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
         dbHelper = new DBHelper(this);
         list_c = dbHelper.get_All_Clientes();
         list_d = new ArrayList<>();
+        list_a = dbHelper.get_All_Articulos();
         elemento_dp = null;
 
         findViewById(R.id.btn_aceptar).setOnClickListener(this);
@@ -101,11 +100,25 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
 
             Articulo objArticulo = dbHelper.get_Articulo(Integer.parseInt(elemento_dp[5].toString()));
             dbHelper.Update_Stock_Articulo(Integer.parseInt(elemento_dp[5].toString()), Integer.parseInt(elemento_dp[4].toString()) + objArticulo.getStock());
-            Toast.makeText(this, "POSITIVO C++ " + objArticulo.getDescripcion(), Toast.LENGTH_SHORT).show();
+            list_a = dbHelper.get_All_Articulos();
 
-            art_stock += Integer.parseInt(elemento_dp[4].toString());
+            spn_cliente.setEnabled(false);
+            //spn_cliente.setVisibility(View.GONE);
+
+            Cliente objCliente = dbHelper.get_Cliente(Integer.parseInt(elemento_dp[1].toString()));
+            Toast.makeText(this, "cliente " + objCliente.getNombre(), Toast.LENGTH_SHORT).show();
+            ((TextView) findViewById(R.id.tv_cliente)).setText(objCliente.getNombre());
+
+            int r = 0;
+            for (int i = 0; i < list_a.size(); i++) {
+                if (list_a.get(i).getIdarticulo() == Integer.parseInt(elemento_dp[5].toString())) {
+                    r = i;
+                    break;
+                }
+            }
+            spn_articulo.setSelection(r);
         } else if (option == 1) {
-
+            findViewById(R.id.tv_cliente).setVisibility(View.GONE);
         }
 
 
@@ -113,8 +126,11 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 list_d.clear();
-                list_spn_direcciones(list_c.get(position).getIdcliente());
-                idcliente = list_c.get(position).getIdcliente();
+                if (elemento_dp != null) {
+                    list_spn_direcciones(Integer.parseInt(elemento_dp[1].toString()));
+                } else {
+                    list_spn_direcciones(list_c.get(position).getIdcliente());
+                }
             }
 
             @Override
@@ -183,6 +199,10 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
         if (v.getId() == R.id.btn_aceptar) {
             register_pedido(v);
         } else if (v.getId() == R.id.btn_cancelar) {
+            if (elemento_dp != null) {
+                Articulo objArticulo = dbHelper.get_Articulo(Integer.parseInt(elemento_dp[5].toString()));
+                dbHelper.Update_Stock_Articulo(Integer.parseInt(elemento_dp[5].toString()), objArticulo.getStock() - Integer.parseInt(elemento_dp[4].toString()));
+            }
             finish();
         } else if (v.getId() == R.id.btn_add_articulo) {
             register_articulo(v);
@@ -220,17 +240,31 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
                 tie_fechaenvio.setError("Fecha inválida");
             }
             if (f_envio_LDT != null)  {
-                Pedido nuevoPedido = new Pedido(idcliente, f_envio_LDT, iddireccion);
-                int id_pedido = dbHelper.Insert_Pedido(nuevoPedido);
-
                 int p_Art = spn_articulo.getSelectedItemPosition();
                 int id_articulo = list_a.get(p_Art).getIdarticulo();
+
                 int cantidad = Integer.parseInt(tie_cantidad.getText().toString());
-                Detalle objDetalle = new Detalle(id_articulo, id_pedido, cantidad);
-                dbHelper.Insert_Detalle(objDetalle);
-                Articulo objArticulo = new Articulo(list_a.get(p_Art).getDescripcion(), list_a.get(p_Art).getStock() - cantidad);
-                objArticulo.setIdarticulo(id_articulo);
-                dbHelper.Update_Articulo(objArticulo);
+                if (option == 1) {
+                    Pedido nuevoPedido = new Pedido(idcliente, f_envio_LDT, iddireccion);
+                    int id_pedido = dbHelper.Insert_Pedido(nuevoPedido);
+
+                    Detalle objDetalle = new Detalle(id_articulo, id_pedido, cantidad);
+                    dbHelper.Insert_Detalle(objDetalle);
+
+                } else if(option == 2){
+                    int idp = Integer.parseInt(elemento_dp[0].toString());
+                    int idc = Integer.parseInt(elemento_dp[1].toString());
+                    Pedido objPedido = new Pedido(idp, idc, f_envio_LDT, iddireccion);
+                    dbHelper.Update_Pedido(objPedido);
+
+                    dbHelper.Delete_Detalle(Integer.parseInt(elemento_dp[5].toString()), Integer.parseInt(elemento_dp[0].toString()));
+
+                    Detalle objDetalle = new Detalle(id_articulo, idp, cantidad);
+                    dbHelper.Insert_Detalle(objDetalle);
+                }
+                Toast.makeText(this, "descripcion: " + list_a.get(p_Art).getDescripcion() + " id_articulo: " + id_articulo, Toast.LENGTH_SHORT).show();
+
+                dbHelper.Update_Stock_Articulo(id_articulo, list_a.get(p_Art).getStock() - cantidad);
                 finish();
             } else {
                 Toast.makeText(this, "Fecha inválida", Toast.LENGTH_SHORT).show();
@@ -253,12 +287,11 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
         for (int i = 0; i < list_d_t.size(); i++) {
             if (!list_d_t.get(i).getNumero().isEmpty()) {
                 list_d.add(list_d_t.get(i));
-                datos.add(list_d_t.get(i).getNumero() + ", " + list_d_t.get(i).getComuna() + ", " + list_d_t.get(i).getCiudad());
+                datos.add(list_d_t.get(i).getNumero() + ", " + list_d_t.get(i).getCalle() + ", " + list_d_t.get(i).getComuna());
             }
         }
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, datos);
         spn_direccion.setAdapter(adapter);
-        //Toast.makeText(this, "fre " + list_d.size(), Toast.LENGTH_SHORT).show();
     }
 
     private void mostrarDateTimePicker(Context context, EditText editText) {
@@ -283,7 +316,6 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void list_spn_articulos() {
-        list_a = dbHelper.get_All_Articulos();
         ArrayList<String> datos = new ArrayList<>();
         for (int i = 0; i < list_a.size(); i++) {
             datos.add(list_a.get(i).getDescripcion());
@@ -330,12 +362,18 @@ public class PedidoFormActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void add_cantidad() {
-        int cantidad = Integer.parseInt(tie_cantidad.getText().toString()) + 1;
-        if (cantidad <= art_stock) {
-            tie_cantidad.setText(String.valueOf(cantidad));
-            tv_cantidad_disp.setText("C. Disp: " + cantidad + "/" + art_stock);
+        String cantidadStr = tie_cantidad.getText().toString();
+        if (!cantidadStr.isEmpty()) {
+            int cantidad = Integer.parseInt(cantidadStr);
+            if (cantidad < art_stock) {
+                cantidad++;
+                tie_cantidad.setText(String.valueOf(cantidad));
+            } else {
+                Toast.makeText(this, "No se puede exceder el stock disponible", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "Stock total", Toast.LENGTH_SHORT).show();
+            tie_cantidad.setText("1");
         }
     }
+
 }

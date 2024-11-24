@@ -39,10 +39,7 @@ public class DetalleTable {
         values.put(KEY_IDPEDIDO, objDetalle.getIdpedido());
         values.put(KEY_IDARTICULO, objDetalle.getIdarticulo());
         values.put(KEY_CANTIDAD, objDetalle.getCantidad());
-        long p = db.insert(TABLE_DETALLE, null, values);
-        if (p == -1) {
-            Log.e("DB_ERROR", "Error al insertar en la tabla detalle" + objDetalle.getIdpedido() + " iar:" + objDetalle.getIdarticulo());
-        }
+        db.insert(TABLE_DETALLE, null, values);
     }
 
     public static void Update_Detalle(SQLiteDatabase db, Detalle objDetalle) {
@@ -50,7 +47,7 @@ public class DetalleTable {
         values.put(KEY_IDPEDIDO, objDetalle.getIdpedido());
         values.put(KEY_IDARTICULO, objDetalle.getIdarticulo());
         values.put(KEY_CANTIDAD, objDetalle.getCantidad());
-        db.update(TABLE_DETALLE, values, KEY_IDPEDIDO + " = " + objDetalle.getIdpedido() + " AND " + KEY_IDARTICULO + " = " + objDetalle.getIdarticulo(), null);
+        db.update(TABLE_DETALLE, values, KEY_IDARTICULO + " = " + objDetalle.getIdarticulo() + " AND " + KEY_IDPEDIDO + " = " + objDetalle.getIdpedido(), null);
     }
 
     public static void Delete_Detalle(SQLiteDatabase db, int idarticulo, int idpedido) {

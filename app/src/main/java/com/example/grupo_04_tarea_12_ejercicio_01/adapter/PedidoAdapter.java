@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.grupo_04_tarea_12_ejercicio_01.PedidoFormActivity;
 import com.example.grupo_04_tarea_12_ejercicio_01.R;
 import com.example.grupo_04_tarea_12_ejercicio_01.db.DBHelper;
+import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Articulo;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Cliente;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Direccion;
 import com.example.grupo_04_tarea_12_ejercicio_01.modelo.Pedido;
@@ -116,175 +117,14 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
 
         btn_detalle.setOnClickListener(v -> {
             // Lógica para mostrar detalles
+            detallePedido(elemento);
+            dialog.dismiss();
         });
 
         dialog.show();
     }
 
-    private void editarPedido(Context context, Pedido pedido) {
-        Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.pedido_form_register);
-        dialog.setCancelable(true);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        MaterialButton btn_aceptar = dialog.findViewById(R.id.btn_aceptar);
-        MaterialButton btn_cancelar = dialog.findViewById(R.id.btn_cancelar);
-        EditText et_fechaenvio = dialog.findViewById(R.id.et_fechaenvio);
-        Spinner spnCliente = dialog.findViewById(R.id.spn_cliente);
-        Spinner spnDireccion = dialog.findViewById(R.id.spn_direccion);
-
-        ArrayList<Cliente> clientes = dbHelper.get_All_Clientes();
-
-        ArrayAdapter<Cliente> clienteAdapter = new ArrayAdapter<Cliente>(context, android.R.layout.simple_spinner_item, clientes) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_item, parent, false);
-                }
-                TextView textView = convertView.findViewById(android.R.id.text1);
-                Cliente cliente = getItem(position);
-                textView.setText(cliente.getIdcliente() + " - " + cliente.getNombre());
-                return convertView;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-                }
-                TextView textView = convertView.findViewById(android.R.id.text1);
-                Cliente cliente = getItem(position);
-                textView.setText(cliente.getIdcliente() + " - " + cliente.getNombre());
-                return convertView;
-            }
-        };
-        clienteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnCliente.setAdapter(clienteAdapter);
-
-        for (int i = 0; i < clientes.size(); i++) {
-            if (clientes.get(i).getIdcliente() == pedido.getIdcliente()) {
-                spnCliente.setSelection(i);
-                break;
-            }
-        }
-
-        spnCliente.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Cliente selectedCliente = (Cliente) parent.getItemAtPosition(position);
-                int clienteId = selectedCliente.getIdcliente();
-
-                ArrayList<Direccion> direcciones = dbHelper.get_All_Direcciones(clienteId);
-
-                ArrayAdapter<Direccion> direccionAdapter = new ArrayAdapter<Direccion>(context, android.R.layout.simple_spinner_item, direcciones) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_item, parent, false);
-                        }
-                        TextView textView = convertView.findViewById(android.R.id.text1);
-                        Direccion direccion = getItem(position);
-                        textView.setText(direccion.getCalle() + ", " + direccion.getComuna() + ", " + direccion.getCiudad());
-                        return convertView;
-                    }
-
-                    @Override
-                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                        if (convertView == null) {
-                            convertView = LayoutInflater.from(context).inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-                        }
-                        TextView textView = convertView.findViewById(android.R.id.text1);
-                        Direccion direccion = getItem(position);
-                        textView.setText(direccion.getCalle() + ", " + direccion.getComuna() + ", " + direccion.getCiudad());
-                        return convertView;
-                    }
-                };
-                direccionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spnDireccion.setAdapter(direccionAdapter);
-
-                for (int i = 0; i < direcciones.size(); i++) {
-                    if (direcciones.get(i).getIddireccion() == pedido.getIddireccion()) {
-                        spnDireccion.setSelection(i);
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                spnDireccion.setAdapter(null);
-            }
-        });
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            et_fechaenvio.setText(pedido.getFecha_envio().format(formatter));
-        }
-
-        et_fechaenvio.setOnClickListener(v -> mostrarDateTimePicker(context, et_fechaenvio));
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            btn_aceptar.setOnClickListener(v -> {
-                String fechaEnvio = et_fechaenvio.getText().toString();
-                Cliente clienteSeleccionado = (Cliente) spnCliente.getSelectedItem();
-                Direccion direccionSeleccionada = (Direccion) spnDireccion.getSelectedItem();
-
-                if (fechaEnvio.isEmpty()) {
-                    et_fechaenvio.setError("Debe seleccionar una fecha y hora");
-                } else if (clienteSeleccionado == null || direccionSeleccionada == null) {
-                    Toast.makeText(context, "Debe seleccionar cliente y dirección", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Convertir la fecha de envío a LocalDateTime
-                    LocalDateTime fechaEnvioLocalDateTime;
-                    try {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        fechaEnvioLocalDateTime = LocalDateTime.parse(fechaEnvio, formatter);
-                    } catch (DateTimeParseException e) {
-                        e.printStackTrace();
-                        et_fechaenvio.setError("Fecha inválida");
-                        return;
-                    }
-
-                    // Actualizar pedido
-                    pedido.setFecha_envio(fechaEnvioLocalDateTime);
-                    pedido.setIdcliente(clienteSeleccionado.getIdcliente());
-                    pedido.setIddireccion(direccionSeleccionada.getIddireccion());
-
-                    dbHelper.Update_Pedido(pedido); // Asegúrate de tener este método en DBHelper
-                    int position = pedidos.indexOf(pedido);
-                    notifyItemChanged(position);
-                    Toast.makeText(context, "Se actualizo correctamente", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
-            });
-        }
-
-        btn_cancelar.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
-    }
-
-
-
-    private void mostrarDateTimePicker(Context context, EditText editText) {
-        final Calendar calendar = Calendar.getInstance();
-
-        new DatePickerDialog(context, (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            new TimePickerDialog(context, (timeView, hourOfDay, minute) -> {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                String fechaHora = sdf.format(calendar.getTime());
-
-                editText.setText(fechaHora);
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
-    }
 
     private void eliminarPedido(Object[] elemento, int position) {
         new AlertDialog.Builder(context)
@@ -297,6 +137,8 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
                         pedido = dbHelper.get_Pedido(Integer.parseInt(elemento[0].toString()));
                     }
                     dbHelper.Delete_Pedido(pedido.getIdpedido());
+                    Articulo objArticulo = dbHelper.get_Articulo(Integer.parseInt(elemento[5].toString()));
+                    dbHelper.Update_Stock_Articulo(objArticulo.getIdarticulo(), objArticulo.getStock() + Integer.parseInt(elemento[4].toString()));
                     pedidos.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, pedidos.size());
@@ -305,7 +147,35 @@ public class PedidoAdapter extends RecyclerView.Adapter<PedidoAdapter.PedidoView
                 .show();
     }
 
+    private void detallePedido(Object[] elemento) {
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.pedido_view_detail);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
 
+        TextView tv_idpedido = dialog.findViewById(R.id.tv_idpedido);
+        TextView tv_cliente = dialog.findViewById(R.id.tv_cliente);
+        TextView tv_articulo = dialog.findViewById(R.id.tv_articulo);
+        TextView tv_cant_articulo = dialog.findViewById(R.id.tv_cant_articulo);
+        TextView tv_direccion = dialog.findViewById(R.id.tv_direccion);
+        TextView tv_fecha = dialog.findViewById(R.id.tv_fecha);
+
+        tv_idpedido.setText(elemento[0].toString());
+
+        Cliente objCliente = dbHelper.get_Cliente(Integer.parseInt(elemento[1].toString()));
+        tv_cliente.setText(objCliente.getNombre());
+
+        Articulo objArticulo = dbHelper.get_Articulo(Integer.parseInt(elemento[5].toString()));
+        tv_articulo.setText(objArticulo.getDescripcion());
+        tv_cant_articulo.setText(elemento[4].toString());
+
+        Direccion objDireccion = dbHelper.get_Direccion(Integer.parseInt(elemento[3].toString()));
+        tv_direccion.setText(objDireccion.getCalle() + ", " + objDireccion.getComuna() + ", " + objDireccion.getCiudad());
+
+        tv_fecha.setText(elemento[2].toString());
+
+        dialog.show();
+    }
 
     public static class PedidoViewHolder extends RecyclerView.ViewHolder {
         TextView tvCodigo, tvCliente, tvFecha, tvDireccion;
